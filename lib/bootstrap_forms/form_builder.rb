@@ -19,7 +19,7 @@ module BootstrapForms
       end
     end
 
-    %w(country_select time_zone_select email_field file_field number_field password_field phone_field range_field search_field telephone_field text_area text_field url_field datetime_select date_select time_select).each do |method_name|
+    %w(time_zone_select email_field file_field number_field password_field phone_field range_field search_field telephone_field text_area text_field url_field datetime_select date_select time_select).each do |method_name|
       define_method(method_name) do |name, *args|
         # Workaround for ree and 1.8.7 since they don't allow block arguments with default values
         args = args.extract_options!
@@ -62,6 +62,19 @@ module BootstrapForms
             rebuilt_args = args + [options.merge(@field_options.merge(required_attribute)), html_options]
             extras { super(name, *rebuilt_args) }
           end
+        end
+      end
+    end
+
+    def country_select(name, priority_countries = nil, options = {}, html_options = {})
+      @name = name
+      @field_options = field_options(options)
+      @args = [ priority_countries ]
+
+      control_group_div do
+        label_field + input_div do
+          rebuilt_args = @args + [options.merge(@field_options.merge(required_attribute)), html_options]
+          extras { super(name, *rebuilt_args) }
         end
       end
     end
